@@ -8,7 +8,6 @@ dash-bootstrap-components==1.1.0
 dash-core-components==2.0.0
 dash-html-components==2.0.0
 dash-table==5.0.0
-Fiona==1.8.13.post1
 Flask==2.1.2
 Flask-Compress==1.12
 fonttools==4.25.0
