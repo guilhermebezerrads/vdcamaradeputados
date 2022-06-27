@@ -2,6 +2,7 @@ import pandas as pd
 ### ------***CÓDIGO DO DASHBOARD USANDO PLOTLY DASH***------ ###
 
 frame = pd.read_csv('participacao_percent.csv')
+line = pd.read_csv('posicionamento_deputados.csv')
 
 import plotly.graph_objects as go
 import plotly.express as px
@@ -49,6 +50,19 @@ app.layout = dbc.Container([
         width={'size':8}
         )
     ], justify='center'
+    ),
+
+    dbc.Row([
+        dbc.Col([
+            html.P(''),
+            #Gráfico participação em votação por região
+            dcc.Graph(id='line-chart',
+                      figure={}
+                      )
+        ],
+        width={'size':8}
+        )
+    ], justify='center'
     )
 
 ], fluid=True
@@ -63,6 +77,28 @@ def update_graph(ano):
     dv_2020 = frame[frame['ano'] == ano]
     
     fig = px.bar(dv_2020, x='posicionamento', y='voto_norm', color='Regiao', barmode='group')
+       
+    return fig
+
+@app.callback(
+    Output('line-chart', 'figure'),
+    Input('select', 'value')
+)
+
+def grafico_line(dummy):
+    c_map = {
+        'Centro': '#71c055',
+        'Centro-direita': '#40b8ea',
+        'Centro-esquerda': '#fba51a',
+        'Direita': '#436fb6',
+        'Esquerda': '#ed1e24'
+    }
+
+    fig = px.line(line, x="Ano", y="Deputados", color='Posicionamento', color_discrete_map=c_map)
+    fig.update_layout(
+        title_text="Deputados Votantes por Posicionamento",
+        title_x=0.5,
+    )
        
     return fig
 
