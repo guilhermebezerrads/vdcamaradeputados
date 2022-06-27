@@ -22,7 +22,12 @@ app.layout = dbc.Container([
 
     #Título
     dbc.Row([
-        dbc.Col(html.H1("Dashboard teste",
+        dbc.Col(html.H1("Câmara dos Deputados - Dados abertos",
+                        className='text-center text-primary, mb-4'),
+                width=12)
+    ]),
+    dbc.Row([
+        dbc.Col(html.H2("Visualização de Dados",
                         className='text-center text-primary, mb-4'),
                 width=12)
     ]),
