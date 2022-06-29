@@ -106,7 +106,16 @@ app.layout = dbc.Container([
 def update_graph(ano):
     dv_2020 = frame[frame['ano'] == ano]
     
-    fig = px.bar(dv_2020, x='posicionamento', y='voto_norm', color='Regiao', barmode='group')
+    fig = px.bar(
+        dv_2020, 
+        x='posicionamento', 
+        y='voto_norm', 
+        category_orders={
+            "posicionamento": ["Esquerda", "Centro-esquerda", "Centro", "Centro-direita", "Direita"]
+        },
+        color='Regiao', 
+        barmode='group'
+    )
        
     return fig
 
