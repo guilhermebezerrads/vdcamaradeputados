@@ -119,19 +119,47 @@ app.layout = dbc.Container([
     Input('select', 'value')
 )
 def update_graph(ano):
-    dv_2020 = frame[frame['ano'] == ano]
-    
-    fig = px.bar(
-        dv_2020, 
-        x='posicionamento', 
-        y='voto_norm', 
-        category_orders={
-            "posicionamento": ["Esquerda", "Centro-esquerda", "Centro", "Centro-direita", "Direita"]
-        },
-        color='Regiao', 
-        barmode='group'
+    dv_ano = frame[frame['ano'] == ano]
+    regioes = ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul']
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Esquerda']['voto_norm'],
+        name='Esquerda',
+        marker_color=px.colors.qualitative.Plotly[1]
+    ))
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Centro-esquerda']['voto_norm'],
+        name='Centro-esquerda',
+        marker_color=px.colors.qualitative.Plotly[9]
+    ))
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Centro']['voto_norm'],
+        name='Centro',
+        marker_color='rgb(113, 192, 85)'
+    ))
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Centro-direita']['voto_norm'],
+        name='Centro-direita',
+        marker_color='rgb(64, 184, 234)'
+    ))
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Direita']['voto_norm'],
+        name='Direita',
+        marker_color='rgb(67, 111, 182)'
+    ))
+
+    fig.update_layout(
+        title=f"Participações em Votações por Região\nem {ano} Separado por Posicionamento ",
+        xaxis_title="Região",
+        yaxis_title="Número de Participações em Votação em Porcentagem (%)",
+        legend_title="Posicionamento"
     )
-       
+
     return fig
 
 @app.callback(
