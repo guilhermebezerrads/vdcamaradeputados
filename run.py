@@ -1,14 +1,15 @@
 import pandas as pd
+
 ### ------***CÓDIGO DO DASHBOARD USANDO PLOTLY DASH***------ ###
 
-frame = pd.read_csv('participacao_percent.csv')
-line = pd.read_csv('posicionamento_deputados.csv')
-df_gastos_por_ano_deputado = pd.read_csv('gastos_por_deputado.csv', sep=";")
-df_gastos_por_ano_categoria = pd.read_csv('gastos_por_categoria.csv', sep=";")
-df_gastos_por_ano_partido = pd.read_csv('gastos_por_partido.csv', sep=";")
-df_gastos_por_ano_fornecedor = pd.read_csv('gastos_por_fornecedor.csv', sep=";")
-df_novos_deputados_por_sexo = pd.read_csv('novos_deputados_por_sexo.csv', sep=";")
-df_votacoes_por_ano = pd.read_csv('votacoes_por_ano.csv', sep=",")
+frame = pd.read_csv('csv/participacao_percent.csv')
+line = pd.read_csv('csv/posicionamento_deputados.csv')
+df_gastos_por_ano_deputado = pd.read_csv('csv/gastos_por_deputado.csv', sep=";")
+df_gastos_por_ano_categoria = pd.read_csv('csv/gastos_por_categoria.csv', sep=";")
+df_gastos_por_ano_partido = pd.read_csv('csv/gastos_por_partido.csv', sep=";")
+df_gastos_por_ano_fornecedor = pd.read_csv('csv/gastos_por_fornecedor.csv', sep=";")
+df_novos_deputados_por_sexo = pd.read_csv('csv/novos_deputados_por_sexo.csv', sep=";")
+df_votacoes_por_ano = pd.read_csv('csv/votacoes_por_ano.csv', sep=",")
 
 
 import plotly.graph_objects as go
