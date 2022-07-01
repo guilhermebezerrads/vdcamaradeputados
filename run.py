@@ -8,6 +8,8 @@ df_gastos_por_ano_categoria = pd.read_csv('gastos_por_categoria.csv', sep=";")
 df_gastos_por_ano_partido = pd.read_csv('gastos_por_partido.csv', sep=";")
 df_gastos_por_ano_fornecedor = pd.read_csv('gastos_por_fornecedor.csv', sep=";")
 df_novos_deputados_por_sexo = pd.read_csv('novos_deputados_por_sexo.csv', sep=";")
+df_votacoes_por_ano = pd.read_csv('votacoes_por_ano.csv', sep=",")
+
 
 import plotly.graph_objects as go
 import plotly.express as px
@@ -74,6 +76,18 @@ app.layout = dbc.Container([
         dbc.Col([
             html.H2("Novos deputados por sexo"),
             dcc.Graph(id='chart_deputados_por_sexo',
+                      figure={}
+            )
+        ],
+        width={'size':8}
+        )
+    ], justify='center'
+    ),
+
+    dbc.Row([
+        dbc.Col([
+            html.H2("Quantidade de votações ao longo dos anos"),
+            dcc.Graph(id='votacoes-por-ano-chart',
                       figure={}
             )
         ],
@@ -333,6 +347,24 @@ def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=10):
         xaxis_title_text=xaxis_title,
         yaxis_title_text=yaxis_title
     )
+    return fig
+
+@app.callback(
+    Output('votacoes-por-ano-chart', 'figure'),
+    Input('select', 'value')
+)
+
+def grafico_votacoes_por_ano(dummy):
+
+    fig = px.bar(df_votacoes_por_ano, x="ano", y="idVotacao")
+    fig.update_layout(
+        plot_bgcolor="white",
+        title_x=0.5,
+        title_text="Total de votações ao longo dos anos",
+        xaxis_title_text="<b>Ano</b>",
+        yaxis_title_text="<b>Quantidade de votações</b>",
+    )
+       
     return fig
 
 if __name__ == '__main__':
