@@ -402,6 +402,7 @@ def gera_tabs_gastos(tab):
                     dcc.Slider(id='id_ano_gasto',
                         min=2008,
                         max=2022,
+                        included=False,
                         step=None,
                         marks={i:str(i) for i in range(2008, 2022 + 1)},
                         value=2022
