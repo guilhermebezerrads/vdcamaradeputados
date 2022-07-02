@@ -26,92 +26,138 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY],
 
 server = app.server
 
+# the style arguments for the sidebar. We use position:fixed and a fixed width
+SIDEBAR_STYLE = {
+    "position": "fixed",
+    "top": 0,
+    "left": 0,
+    "bottom": 0,
+    "width": "12rem",
+    "padding": "2rem 1rem",
+    "background-color": "#f8f9fa",
+    "overflow": "scroll",
+}
 
-app.layout = dbc.Container([
+# the styles for the main content position it to the right of the sidebar and
+# add some padding.
+CONTENT_STYLE = {
+    #"margin-left": "5rem",
+    #"margin-right": "2rem",
+    #"padding": "2rem 1rem",
+    #"display": "inline-block"
+}
 
-    #Título
-    dbc.Row([
-        dbc.Col(html.H1("Câmara dos Deputados - Dados abertos",
-                        className='text-center text-primary, mb-4'),
-                width=12)
-    ]),
-    dbc.Row([
-        dbc.Col(html.H2("Visualização de Dados",
-                        className='text-center text-primary, mb-4'),
-                width=12)
-    ]),
-    dbc.Row([
-        dbc.Col([
-            html.P(''),
-            #select ano
-            dcc.Dropdown(id='select',
-                         multi=False,
-                         value= 2003,
-                         options=[{'label': str(x), 'value': int(x)} for x in sorted(frame['ano'].unique())]
-                         ),
-
-            #Gráfico participação em votação por região
-            dcc.Graph(id='bar-chart',
-                      figure={}
-                      )
-        ],
-        width={'size':8}
-        )
-    ], justify='center'
-    ),
-
-    dbc.Row([
-        dbc.Col([
-            html.P(''),
-            #Gráfico participação em votação por região
-            dcc.Graph(id='line-chart',
-                      figure={}
-                      )
-        ],
-        width={'size':8}
-        )
-    ], justify='center'
-    ),
-
-    dbc.Row([
-        dbc.Col([
-            html.H2("Novos deputados por sexo"),
-            dcc.Graph(id='chart_deputados_por_sexo',
-                      figure={}
-            )
-        ],
-        width={'size':8}
-        )
-    ], justify='center'
-    ),
-
-    dbc.Row([
-        dbc.Col([
-            html.H2("Quantidade de votações ao longo dos anos"),
-            dcc.Graph(id='votacoes-por-ano-chart',
-                      figure={}
-            )
-        ],
-        width={'size':8}
-        )
-    ], justify='center'
-    ),
-
-    dbc.Container([
-        html.H1('Gastos na camara'),
-        dcc.Tabs(id="tabs_gastos", value="tab_ano",
-
-            children=[
-                dcc.Tab(label="Por ano", value="tab_ano"),
-                dcc.Tab(label="Total", value="tab_total"),
-            ]
+sidebar = html.Div(
+    [
+        html.H4("Sidebar"),
+        html.Hr(),
+        html.P(
+            "A simple sidebar", className="lead"
+        ), 
+        html.A(
+            "grafico de linhas", href='#linhas'
         ),
-        html.Div(id="tabs_gastos_content")
-    ]),
+    ],
 
-
-], fluid=True
+    style=SIDEBAR_STYLE,
 )
+
+#app.layout = dbc.Container([
+maindiv = html.Div(
+    id='firstDiv',
+
+    children = [
+        #Título
+        dbc.Row([
+            dbc.Col(html.H1("Câmara dos Deputados - Dados abertos",
+                            className='text-center text-primary, mb-4'),
+                    width=12)
+        ]),
+        dbc.Row([
+            dbc.Col(html.H2("Visualização de Dados",
+                            className='text-center text-primary, mb-4'),
+                    width=12)
+        ]),
+        dbc.Row([
+            dbc.Col([
+                html.P(''),
+                #select ano
+                dcc.Dropdown(id='select',
+                            multi=False,
+                            value= 2003,
+                            options=[{'label': str(x), 'value': int(x)} for x in sorted(frame['ano'].unique())]
+                            ),
+
+                #Gráfico participação em votação por região
+                dcc.Graph(id='bar-chart',
+                        figure={}
+                        ),
+            ],
+            width={'size':8}
+            )
+        ], justify='center'
+        ),
+
+        dbc.Row([
+            dbc.Col([
+                html.A(id='linhas'),
+                html.P(''),
+                #Gráfico participação em votação por região
+                dcc.Graph(id='line-chart',
+                        figure={}
+                        ),
+            ],
+            width={'size':8}
+            )
+        ], justify='center'
+        ),
+
+        dbc.Row([
+            dbc.Col([
+                html.H2("Novos deputados por sexo"),
+                dcc.Graph(id='chart_deputados_por_sexo',
+                        figure={}
+                )
+            ],
+            width={'size':8}
+            )
+        ], justify='center'
+        ),
+
+        dbc.Row([
+            dbc.Col([
+                html.H2("Quantidade de votações ao longo dos anos"),
+                dcc.Graph(id='votacoes-por-ano-chart',
+                        figure={}
+                )
+            ],
+            width={'size':8}
+            )
+        ], justify='center'
+        ),
+
+        dbc.Row([
+            dbc.Col([
+                html.H1('Gastos na camara'),
+                dcc.Tabs(id="tabs_gastos", value="tab_ano",
+
+                    children=[
+                        dcc.Tab(label="Por ano", value="tab_ano"),
+                        dcc.Tab(label="Total", value="tab_total"),
+                    ]
+                ),
+                html.Div(id="tabs_gastos_content")
+            ],
+            width={'size':8}
+            )
+        ], justify="center"
+        ),
+
+    ], style = CONTENT_STYLE
+
+)
+
+app.layout = html.Div([sidebar, maindiv])
 
 # Gráfico
 @app.callback(
@@ -119,19 +165,47 @@ app.layout = dbc.Container([
     Input('select', 'value')
 )
 def update_graph(ano):
-    dv_2020 = frame[frame['ano'] == ano]
-    
-    fig = px.bar(
-        dv_2020, 
-        x='posicionamento', 
-        y='voto_norm', 
-        category_orders={
-            "posicionamento": ["Esquerda", "Centro-esquerda", "Centro", "Centro-direita", "Direita"]
-        },
-        color='Regiao', 
-        barmode='group'
+    dv_ano = frame[frame['ano'] == ano]
+    regioes = ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul']
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Esquerda']['voto_norm'],
+        name='Esquerda',
+        marker_color=px.colors.qualitative.Plotly[1]
+    ))
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Centro-esquerda']['voto_norm'],
+        name='Centro-esquerda',
+        marker_color=px.colors.qualitative.Plotly[9]
+    ))
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Centro']['voto_norm'],
+        name='Centro',
+        marker_color='rgb(113, 192, 85)'
+    ))
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Centro-direita']['voto_norm'],
+        name='Centro-direita',
+        marker_color='rgb(64, 184, 234)'
+    ))
+    fig.add_trace(go.Bar(
+        x=regioes,
+        y=dv_ano[dv_ano['posicionamento'] == 'Direita']['voto_norm'],
+        name='Direita',
+        marker_color='rgb(67, 111, 182)'
+    ))
+
+    fig.update_layout(
+        title=f"Participações em Votações por Região\nem {ano} Separado por Posicionamento ",
+        xaxis_title="Região",
+        yaxis_title="Número de Participações em Votação em Porcentagem (%)",
+        legend_title="Posicionamento"
     )
-       
+
     return fig
 
 @app.callback(
@@ -224,7 +298,6 @@ def gera_tabs_gastos(tab):
                         figure={}
                         )
                 ],
-                width={'size':8}
                 )
             ], justify='center'
         ),
@@ -246,7 +319,6 @@ def gera_tabs_gastos(tab):
                         figure={}
                         )
                 ],
-                width={'size':8}
             )], 
             justify='center'
         ),
