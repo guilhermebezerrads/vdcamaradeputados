@@ -255,7 +255,7 @@ maindiv = html.Div(
                     "um gasto totalmente fora do normal nos anos 2013 e 2014. Uma curiosidade é que procurando saber mais sobre o deputado, "
                     "encontramos notícias de sua prisão à mando do STF em julho de 2016."
                 ),
-                html.P('Outra coisa que pode ser notado é o valor enorme gasto por "Divulgação de atividade parlamenta" e '
+                html.P('Outra coisa que pode ser notado é o valor enorme gasto nas categorias "Divulgação de atividade parlamenta" e '
                     '"Passagem área", somando mais de R$1 bilhão de gastos. Dos fornecedores que mais receberam dinheiro '
                     'dos deputados estão as companhias aéreas TAM e GOL.'
                 ),
