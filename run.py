@@ -365,6 +365,8 @@ def grafico_votacoes_por_ano(dummy):
         xaxis_title_text="<b>Ano</b>",
         yaxis_title_text="<b>Quantidade de votações</b>",
     )
+    fig.update_traces(marker_color='#30ade3')
+    fig.update_layout(xaxis = {'type' : 'category'})
        
     return fig
 
