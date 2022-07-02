@@ -189,6 +189,16 @@ maindiv = html.Div(
             dbc.Col([
                 html.A(id='link-sexo'),
                 html.H2("Novos deputados por sexo"),
+                html.P("O gráfico a seguir mostra a diferença gigantesca entre o número de novos deputados "
+                    "comparados ao de novas deputadas, que começou a ter um crescimento, mesmo que pequeno, apenas depois do fim "
+                    "da ditadura (1985)."
+                ),
+                html.P("É possível observar também a primeira deputada eleita, Carlota Pereira de Queirós, em 1933. "
+                    "Entretanto, mesmo sendo eleita, o período 1933-1982 somam apenas 17 deputadas, enquanto que em 1986 "
+                    "houve 24 deputadas eleitas, ou seja, um período de quase 50 anos onde se havia o tardio direito de votar e "
+                    "ser eleita, um único ano foi capaz de superá-lo. Infelizmente, ainda é um valor extremamente baixo, expondo "
+                    "a falta de abertura para novas mulheres na política."
+                ),
                 dcc.Graph(id='chart_deputados_por_sexo',
                           figure={}
                           )
@@ -236,11 +246,24 @@ maindiv = html.Div(
             dbc.Col([
                 html.A(id='link-gastos'),
                 html.H1('Gastos na Câmara'),
+                html.P('Para ter uma noção dos gastos dos deputados, observando gastos fora do normal, '
+                    'abaixo foi proposto um gráfico onde mostra os N deputados que mais gastaram no ano escolhido '
+                    'ou de um intervalo de período em [2003, 2022]. O mesmo é possível observar para partidos, categorias '
+                    'e o valor pago para fornecedores.'
+                ),
+                html.P("Alguns fatos interessantes que podem ser observados: O deputado Chico das Verduras (PRP) apresentou "
+                    "um gasto totalmente fora do normal nos anos 2013 e 2014. Uma curiosidade é que procurando saber mais sobre o deputado, "
+                    "encontramos notícias de sua prisão à mando do STF em julho de 2016."
+                ),
+                html.P('Outra coisa que pode ser notado é o valor enorme gasto por "Divulgação de atividade parlamenta" e '
+                    '"Passagem área", somando mais de R$1 bilhão de gastos. Dos fornecedores que mais receberam dinheiro '
+                    'dos deputados estão as companhias aéreas TAM e GOL.'
+                ),
                 dcc.Tabs(id="tabs_gastos", value="tab_ano",
 
                          children=[
                              dcc.Tab(label="Por ano", value="tab_ano"),
-                             dcc.Tab(label="Total", value="tab_total"),
+                             dcc.Tab(label="Intervalo", value="tab_intervalo"),
                          ]
                          ),
                 html.Div(id="tabs_gastos_content")
@@ -448,7 +471,7 @@ def gera_tabs_gastos(tab):
                 daq.NumericInput(id='id_ano_ranking',
                             min=3,
                             max=2000,
-                            value= 10,
+                            value= 15,
                             size=100,
                             label="Quantidade no ranking",
                             labelPosition='bottom'
@@ -474,26 +497,42 @@ def gera_tabs_gastos(tab):
             ],
         )], justify='center'
     ),
-    elif tab == 'tab_total':
+    elif tab == 'tab_intervalo':
         return dbc.Row([
             dbc.Col([
                 html.P(''),
                 dcc.Dropdown(id='id_total_tipo_gasto',
                             multi=False,
                             value="Gastos por deputados",
-                            options=gastos_tipos
+                            options=gastos_tipos,
+                            style={
+                                "margin-bottom": '15px',
+                            }
                             ),
                 daq.NumericInput(id='id_total_ranking',
                             min=3,
                             max=2000,
-                            value= 10,
+                            value= 15,
                             size=100,
                             label="Quantidade no ranking",
                             labelPosition='bottom'
                             ),
                 dcc.Graph(id='chart_total_gastos',
                         figure={}
-                        )
+                        ),
+
+                html.Div(
+                    dcc.RangeSlider(id='id_ano_gasto_range',
+                        min=2008,
+                        max=2022,
+                        step=None,
+                        marks={i:str(i) for i in range(2008, 2022 + 1)},
+                        value=[2008, 2022]
+                    ),
+                    style={
+                        "margin-bottom": "20px",
+                    }
+                )
                 ],
             )
         ], justify='center'
@@ -515,7 +554,7 @@ map_tipos_y = {
     Input('id_ano_gasto', 'value'),
     Input('id_ano_ranking', 'value')
 )
-def gera_grafico_gastos_por_ano_(tipo_gasto="Gastos por deputados", ano=2021, ranking=10):
+def gera_grafico_gastos_por_ano_(tipo_gasto="Gastos por deputados", ano=2021, ranking=15):
     df = None
     title = ""
     yaxis_title = ""
@@ -566,9 +605,10 @@ def gera_grafico_gastos_por_ano_(tipo_gasto="Gastos por deputados", ano=2021, ra
 @app.callback(
     Output('chart_total_gastos', 'figure'),
     Input('id_total_tipo_gasto', 'value'),
-    Input('id_total_ranking', 'value')
+    Input('id_total_ranking', 'value'),
+    [Input('id_ano_gasto_range', 'value')]
 )
-def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=10):
+def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=15, range_ano=[2008, 2022]):
     df = None
     title = ""
     yaxis_title = ""
@@ -588,19 +628,21 @@ def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=10):
         yaxis_title = "<b>Nome</b> do fornecedor"
         xaxis_title = "<b>Valor líquido</b> recebido"
 
+    df = df[df["numAno"] >= range_ano[0]]
+    df = df[df["numAno"] <= range_ano[1]]
     df = df.groupby([map_tipos_y[tipo_gasto]], as_index=False).sum().sort_values(by=["vlrLiquido"], ascending=False)
     len_max = len(df) - 1
     ranking = len_max if ranking > len_max else ranking
     df = df[0:ranking]
 
     if tipo_gasto == "Gastos por deputados":
-        title = f"Gastos dos {ranking} deputados que mais gastaram de 2008 até hoje (2022)"
+        title = f"Gastos dos {ranking} deputados que mais gastaram de {range_ano[0]} até {range_ano[1]}"
     elif tipo_gasto == "Gastos por partido":
-        title =  f"Gastos dos {ranking} partidos que mais gastaram de 2008 até hoje (2022)"
+        title =  f"Gastos dos {ranking} partidos que mais gastaram de {range_ano[0]} até {range_ano[1]}"
     elif tipo_gasto == "Gastos por categoria":
-        title = f"Gasto das {ranking} categorias que mais houve gasto de 2008 até hoje (2022)"
+        title = f"Gasto das {ranking} categorias que mais houve gasto de {range_ano[0]} até {range_ano[1]}"
     elif tipo_gasto == "Recebimento por fornecedores":
-        title = f"Quantidade de dinheiro que os {ranking} fornecedores que mais receberam de 2008 até hoje (2022)"
+        title = f"Quantidade de dinheiro que os {ranking} fornecedores que mais receberam de {range_ano[0]} até {range_ano[1]}"
 
     fig = px.bar(df, x='vlrLiquido', y=map_tipos_y[tipo_gasto], color='vlrLiquido', color_continuous_scale=px.colors.sequential.Tealgrn)
     fig.update_layout(
