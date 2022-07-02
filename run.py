@@ -111,8 +111,7 @@ maindiv = html.Div(
         dbc.Row([
             dbc.Col([
                 html.P(''),
-                html.H4('Teste',
-                        className='text-center text-primary, mb-4'),
+                html.Hr(),
                 # range ano
                 dcc.RangeSlider(2003, 2022, 1, id='range-ano',
                                 value=[2003, 2022],
