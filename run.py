@@ -20,6 +20,7 @@ import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+import dash_daq as daq
 
 # Inicialização do plotly dash no tema Slate
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY],
@@ -189,7 +190,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
-                html.H1('Gastos na camara'),
+                html.H1('Gastos na câmara'),
                 dcc.Tabs(id="tabs_gastos", value="tab_ano",
 
                          children=[
@@ -378,49 +379,65 @@ def gera_tabs_gastos(tab):
             dbc.Col([
                 html.P(''),
                 dcc.Dropdown(id='id_ano_tipo_gasto',
-                             multi=False,
-                             value="Gastos por deputados",
-                             options=gastos_tipos
-                             ),
-                dcc.Dropdown(id='id_ano_gasto',
-                             multi=False,
-                             value=2021,
-                             options=[{'label': str(x), 'value': int(x)} for x in
-                                      sorted(df_gastos_por_ano_deputado["numAno"].unique())]
-                             ),
-                dcc.Dropdown(id='id_ano_raking',
-                             multi=False,
-                             value=10,
-                             options=[{'label': str(x), 'value': int(x)} for x in [3, 4, 5, 6, 8, 10, 12, 15, 20]]
-                             ),
+                            multi=False,
+                            value="Gastos por deputados",
+                            options=gastos_tipos,
+                            style={
+                                "margin-bottom": '15px',
+                            }
+                            ),
+                daq.NumericInput(id='id_ano_ranking',
+                            min=3,
+                            max=2000,
+                            value= 10,
+                            size=100,
+                            label="Quantidade no ranking",
+                            labelPosition='bottom'
+                            ),
+
                 dcc.Graph(id='chart_ano_gastos',
-                          figure={}
-                          )
+                        figure={}
+                        ),
+                html.Div(
+                    dcc.Slider(id='id_ano_gasto',
+                        min=2008,
+                        max=2022,
+                        step=None,
+                        marks={i:str(i) for i in range(2008, 2022 + 1)},
+                        value=2022
+                    ),
+                    style={
+                        "margin-bottom": "20px",
+                    }
+                )
+                        
             ],
-            )
-        ], justify='center'
-        ),
+        )], justify='center'
+    ),
     elif tab == 'tab_total':
         return dbc.Row([
             dbc.Col([
                 html.P(''),
                 dcc.Dropdown(id='id_total_tipo_gasto',
-                             multi=False,
-                             value="Gastos por deputados",
-                             options=gastos_tipos
-                             ),
-                dcc.Dropdown(id='id_total_ranking',
-                             multi=False,
-                             value=10,
-                             options=[{'label': str(x), 'value': int(x)} for x in [3, 4, 5, 6, 8, 10, 12, 15, 20]]
-                             ),
+                            multi=False,
+                            value="Gastos por deputados",
+                            options=gastos_tipos
+                            ),
+                daq.NumericInput(id='id_total_ranking',
+                            min=3,
+                            max=2000,
+                            value= 10,
+                            size=100,
+                            label="Quantidade no ranking",
+                            labelPosition='bottom'
+                            ),
                 dcc.Graph(id='chart_total_gastos',
-                          figure={}
-                          )
-            ],
-            )],
-            justify='center'
-        ),
+                        figure={}
+                        )
+                ],
+            )
+        ], justify='center'
+    ),
 
 
 gastos_tipos = ["Gastos por deputados", "Gastos por partido", "Gastos por categoria", "Recebimento por fornecedores"]
@@ -436,7 +453,7 @@ map_tipos_y = {
     Output('chart_ano_gastos', 'figure'),
     Input('id_ano_tipo_gasto', 'value'),
     Input('id_ano_gasto', 'value'),
-    Input('id_ano_raking', 'value')
+    Input('id_ano_ranking', 'value')
 )
 def gera_grafico_gastos_por_ano_(tipo_gasto="Gastos por deputados", ano=2021, ranking=10):
     df = None
@@ -446,36 +463,43 @@ def gera_grafico_gastos_por_ano_(tipo_gasto="Gastos por deputados", ano=2021, ra
 
     if tipo_gasto == "Gastos por deputados":
         df = df_gastos_por_ano_deputado
-        title = f"Gastos dos {ranking} deputados que mais gastaram em {ano}"
         yaxis_title = "<b>Nome</b> do deputado"
-
     elif tipo_gasto == "Gastos por partido":
         df = df_gastos_por_ano_partido
-        title = f"Gastos dos {ranking} partidos que mais gastaram em {ano}"
-        yaxis_title = "<b>Nome</b> do partido"
-
+        yaxis_title="<b>Nome</b> do partido"
     elif tipo_gasto == "Gastos por categoria":
         df = df_gastos_por_ano_categoria
-        title = f"Gasto das {ranking} categorias que mais houve gasto em {ano}"
         yaxis_title = "<b>Nome</b> da categoria"
-
     elif tipo_gasto == "Recebimento por fornecedores":
         df = df_gastos_por_ano_fornecedor
-        title = f"Quantidade de dinheiro que os {ranking} fornecedores que mais receberam em {ano}"
         yaxis_title = "<b>Nome</b> do fornecedor"
         xaxis_title = "<b>Valor líquido</b> recebido"
 
+
     df = df[df["numAno"] == ano]
+    len_max = len(df) - 1
+    ranking = len_max if ranking > len_max else ranking
     df = df[0:ranking]
-    fig = px.bar(df, x='vlrLiquido', y=map_tipos_y[tipo_gasto])
+
+    if tipo_gasto == "Gastos por deputados":
+        title = f"Gastos dos {ranking} deputados que mais gastaram em {ano}"
+    elif tipo_gasto == "Gastos por partido":
+        title = f"Gastos dos {ranking} partidos que mais gastaram em {ano}"
+    elif tipo_gasto == "Gastos por categoria":
+        title = f"Gasto das {ranking} categorias que mais houve gasto em {ano}"
+    elif tipo_gasto == "Recebimento por fornecedores":
+        title = f"Quantidade de dinheiro que os {ranking} fornecedores que mais receberam em {ano}"
+
+    fig = px.bar(df, x='vlrLiquido', y=map_tipos_y[tipo_gasto], color='vlrLiquido', color_continuous_scale=px.colors.sequential.Tealgrn)
     fig.update_layout(
-        yaxis={'categoryorder': 'total ascending'},
-        title_text=title,
+        yaxis={'categoryorder':'total ascending'},
+        title_text= title,
         title_x=0.5,
         xaxis_title_text=xaxis_title,
         yaxis_title_text=yaxis_title,
         legend_title_text="",
     )
+    fig.update_yaxes(visible=ranking<=22, showticklabels=ranking<=22)
     return fig
 
 
@@ -492,35 +516,41 @@ def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=10):
 
     if tipo_gasto == "Gastos por deputados":
         df = df_gastos_por_ano_deputado
-        title = f"Gastos dos {ranking} deputados que mais gastaram de 2008 até hoje (2022)"
         yaxis_title = "<b>Nome</b> do deputado"
-
     elif tipo_gasto == "Gastos por partido":
         df = df_gastos_por_ano_partido
-        title = f"Gastos dos {ranking} partidos que mais gastaram de 2008 até hoje (2022)"
-        yaxis_title = "<b>Nome</b> do partido"
-
+        yaxis_title="<b>Nome</b> do partido"
     elif tipo_gasto == "Gastos por categoria":
         df = df_gastos_por_ano_categoria
-        title = f"Gasto das {ranking} categorias que mais houve gasto de 2008 até hoje (2022)"
         yaxis_title = "<b>Nome</b> da categoria"
-
     elif tipo_gasto == "Recebimento por fornecedores":
         df = df_gastos_por_ano_fornecedor
-        title = f"Quantidade de dinheiro que os {ranking} fornecedores que mais receberam de 2008 até hoje (2022)"
         yaxis_title = "<b>Nome</b> do fornecedor"
         xaxis_title = "<b>Valor líquido</b> recebido"
 
     df = df.groupby([map_tipos_y[tipo_gasto]], as_index=False).sum().sort_values(by=["vlrLiquido"], ascending=False)
+    len_max = len(df) - 1
+    ranking = len_max if ranking > len_max else ranking
     df = df[0:ranking]
-    fig = px.bar(df, x='vlrLiquido', y=map_tipos_y[tipo_gasto])
+
+    if tipo_gasto == "Gastos por deputados":
+        title = f"Gastos dos {ranking} deputados que mais gastaram de 2008 até hoje (2022)"
+    elif tipo_gasto == "Gastos por partido":
+        title =  f"Gastos dos {ranking} partidos que mais gastaram de 2008 até hoje (2022)"
+    elif tipo_gasto == "Gastos por categoria":
+        title = f"Gasto das {ranking} categorias que mais houve gasto de 2008 até hoje (2022)"
+    elif tipo_gasto == "Recebimento por fornecedores":
+        title = f"Quantidade de dinheiro que os {ranking} fornecedores que mais receberam de 2008 até hoje (2022)"
+
+    fig = px.bar(df, x='vlrLiquido', y=map_tipos_y[tipo_gasto], color='vlrLiquido', color_continuous_scale=px.colors.sequential.Tealgrn)
     fig.update_layout(
-        yaxis={'categoryorder': 'total ascending'},
-        title_text=title,
+        yaxis={'categoryorder':'total ascending'},
+        title_text= title,
         title_x=0.5,
         xaxis_title_text=xaxis_title,
         yaxis_title_text=yaxis_title
     )
+    fig.update_yaxes(visible=ranking<=22, showticklabels=ranking<=22)
     return fig
 
 
@@ -560,7 +590,7 @@ def tema_proposta_por_ano(ano):
         yaxis_title_text="<b>Tema</b>",
         xaxis_title_text="<b>Propostas</b>"
     )
-    #fig.update_xaxes(tickangle=45)
+    # fig.update_xaxes(tickangle=45)
 
        
     return fig
