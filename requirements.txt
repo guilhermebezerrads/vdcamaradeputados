@@ -16,3 +16,4 @@ tenacity==8.0.1
 Werkzeug==2.1.2
 gunicorn
 pandas
+numpy
