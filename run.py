@@ -4,6 +4,7 @@ import pandas as pd
 
 frame = pd.read_csv('csv/participacao_percent.csv')
 line = pd.read_csv('csv/posicionamento_deputados.csv')
+votoOrientacao = pd.read_csv('csv/porcentagem_orientacao.csv')
 df_gastos_por_ano_deputado = pd.read_csv('csv/gastos_por_deputado.csv', sep=";")
 df_gastos_por_ano_categoria = pd.read_csv('csv/gastos_por_categoria.csv', sep=";")
 df_gastos_por_ano_partido = pd.read_csv('csv/gastos_por_partido.csv', sep=";")
@@ -49,13 +50,41 @@ CONTENT_STYLE = {
 
 sidebar = html.Div(
     [
-        html.H4("Sidebar"),
+        html.H4("Visualizações"),
         html.Hr(),
-        html.P(
-            "A simple sidebar", className="lead"
-        ), 
+
         html.A(
-            "grafico de linhas", href='#linhas'
+            "Participações em Votações por Região", href='#link-participacao'
+        ),
+
+        html.Hr(),
+
+        html.A(
+            "Deputados Votantes por Posicionamento", href='#link-deputados-posicionamento'
+        ),
+
+        html.Hr(),
+
+        html.A(
+            "Novos Deputados por Sexo", href='#link-sexo'
+        ),
+
+        html.Hr(),
+
+        html.A(
+            "Quantidade de Votações ao longo dos anos", href='#link-votacoes'
+        ),
+
+        html.Hr(),
+
+        html.A(
+            "Gastos na câmara", href='#link-gastos'
+        ),
+
+        html.Hr(),
+
+        html.A(
+            "Porcentagem de Votos Contra ou a Favor da Orientação do Partido", href='#link-orientacao'
         ),
     ],
 
@@ -81,6 +110,7 @@ maindiv = html.Div(
         dbc.Row([
             dbc.Col([
                 html.P(''),
+                html.A(id='link-participacao'),
                 #select ano
                 dcc.Dropdown(id='select',
                             multi=False,
@@ -100,7 +130,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
-                html.A(id='linhas'),
+                html.A(id='link-deputados-posicionamento'),
                 html.P(''),
                 #Gráfico participação em votação por região
                 dcc.Graph(id='line-chart',
@@ -114,6 +144,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.A(id='link-sexo'),
                 html.H2("Novos deputados por sexo"),
                 dcc.Graph(id='chart_deputados_por_sexo',
                         figure={}
@@ -126,6 +157,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.A(id='link-votacoes'),
                 html.H2("Quantidade de votações ao longo dos anos"),
                 dcc.Graph(id='votacoes-por-ano-chart',
                         figure={}
@@ -138,6 +170,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.A(id='link-gastos'),
                 html.H1('Gastos na camara'),
                 dcc.Tabs(id="tabs_gastos", value="tab_ano",
 
@@ -151,6 +184,20 @@ maindiv = html.Div(
             width={'size':8}
             )
         ], justify="center"
+        ),
+
+        dbc.Row([
+            dbc.Col([
+                html.A(id='link-orientacao'),
+                html.P(''),
+                #Gráfico participação em votação por região
+                dcc.Graph(id='votos-orientacao',
+                        figure={}
+                        ),
+            ],
+            width={'size':8}
+            )
+        ], justify='center'
         ),
 
     ], style = CONTENT_STYLE
@@ -439,6 +486,29 @@ def grafico_votacoes_por_ano(dummy):
     )
     fig.update_traces(marker_color='#30ade3')
     fig.update_layout(xaxis = {'type' : 'category'})
+       
+    return fig
+
+@app.callback(
+    Output('votos-orientacao', 'figure'),
+    Input('select', 'value')
+)
+
+def grafico_orietancao(dummy):
+    c_map = {
+        'favor': '#436fb6',
+        'contra': '#ed1e24'
+    }
+
+    order=['Esquerda', 'Centro-esquerda', 'Centro', 'Centro-direita', 'Direita']
+    fig = px.bar(votoOrientacao, x="Posicionamento", y="% Votos", color="Orientação", 
+                barmode='group', category_orders={'Posicionamento': order}, 
+                color_discrete_map=c_map)
+
+    fig.update_layout(
+        title_text="Porcentagem de Votos Contra ou a Favor da Orientação do Partido",
+        title_x=0.5,
+    )
        
     return fig
 
