@@ -10,6 +10,7 @@ df_gastos_por_ano_partido = pd.read_csv('csv/gastos_por_partido.csv', sep=";")
 df_gastos_por_ano_fornecedor = pd.read_csv('csv/gastos_por_fornecedor.csv', sep=";")
 df_novos_deputados_por_sexo = pd.read_csv('csv/novos_deputados_por_sexo.csv', sep=";")
 df_votacoes_por_ano = pd.read_csv('csv/votacoes_por_ano.csv', sep=",")
+df_prop_tema_ano = pd.read_csv('csv/quant_tema_ano.csv', sep=";")
 
 
 import plotly.graph_objects as go
@@ -128,6 +129,27 @@ maindiv = html.Div(
             dbc.Col([
                 html.H2("Quantidade de votações ao longo dos anos"),
                 dcc.Graph(id='votacoes-por-ano-chart',
+                        figure={}
+                )
+            ],
+            width={'size':8}
+            )
+        ], justify='center'
+        ),
+
+        dbc.Row([
+            dbc.Col([
+                html.H2("Temas das propostas por ano"),
+
+                html.P(''),
+                #select ano
+                dcc.Dropdown(id='select-tema-prop',
+                            multi=False,
+                            value= 2021,
+                            options=[{'label': str(x), 'value': int(x)} for x in sorted(df_prop_tema_ano['Ano'].unique())]
+                            ),
+
+                dcc.Graph(id='tema-proposta-por-ano-chart',
                         figure={}
                 )
             ],
@@ -441,6 +463,54 @@ def grafico_votacoes_por_ano(dummy):
     fig.update_layout(xaxis = {'type' : 'category'})
        
     return fig
+
+@app.callback(
+    Output('tema-proposta-por-ano-chart', 'figure'),
+    Input('select-tema-prop', 'value')
+)
+
+def tema_proposta_por_ano(ano):
+
+    df = df_prop_tema_ano[df_prop_tema_ano["Ano"] == ano].sort_values(by=["Contagem"], ascending=True)
+
+    fig = px.bar(df, y='Tema', x='Contagem',barmode='group')
+    fig.update_traces(marker_color='#30ade3')
+
+    fig.update_layout(
+        plot_bgcolor="white",
+        title_x=0.5,
+        yaxis_title_text="<b>Tema</b>",
+        xaxis_title_text="<b>Propostas</b>"
+    )
+    #fig.update_xaxes(tickangle=45)
+
+       
+    return fig
+
+"""
+@app.callback(
+    Output('ano-proposta-por-tema-chart', 'figure'),
+    Input('select-ano-tema', 'value')
+)
+
+def ano_proposta_por_tema(tema):
+
+    df = df_prop_tema_ano[df_prop_tema_ano["Tema"] == tema].sort_values(by=["Ano"], ascending=True)
+
+    fig = px.bar(df, y='Ano', x='Contagem',barmode='group')
+    fig.update_traces(marker_color='#30ade3')
+
+    fig.update_layout(
+        plot_bgcolor="white",
+        title_x=0.5,
+        yaxis_title_text="<b>Tema</b>",
+        xaxis_title_text="<b>Propostas</b>"
+    )
+    #fig.update_xaxes(tickangle=45)
+
+       
+    return fig
+"""
 
 if __name__ == '__main__':
     app.run_server()
