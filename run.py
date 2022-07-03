@@ -159,7 +159,8 @@ maindiv = html.Div(
                 # range ano
                 dcc.RangeSlider(2003, 2022, 1, id='range-ano',
                                 value=[2003, 2022],
-                                marks={i: str(i) for i in range(2003, 2022 + 1)}
+                                marks={i: str(i) for i in range(2003, 2022 + 1)},
+                                included=False
                                 ),
                 # Gráfico participação em votação por região
                 dcc.Graph(id='mudanca',
