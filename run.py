@@ -224,23 +224,18 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
-                html.A(id='link-propostas'),
-                html.H2("Temas das Propostas por Ano"),
-                html.P(''),
-                #select ano
-                dcc.Dropdown(id='select-tema-prop',
-                            multi=False,
-                            value= 2021,
-                            options=[{'label': str(x), 'value': int(x)} for x in sorted(df_prop_tema_ano['Ano'].unique())]
-                            ),
+                dcc.Tabs(id="tabs_temas", value="tab_ano",
 
-                dcc.Graph(id='tema-proposta-por-ano-chart',
-                        figure={}
-                )
+                         children=[
+                             dcc.Tab(label="Por ano", value="tab_ano"),
+                             dcc.Tab(label="Todos", value="tab_total"),
+                         ]
+                         ),
+                html.Div(id="tabs_temas_content")
             ],
-            width={'size':8}
+                width={'size': 8}
             )
-        ], justify='center'
+        ], justify="center"
         ),
 
         dbc.Row([
@@ -699,6 +694,46 @@ def grafico_orietancao(dummy):
     return fig
 
 @app.callback(
+    Output("tabs_temas_content", 'children'),
+    Input("tabs_temas", 'value')
+)
+def gera_tabs_temas(tab):
+    if tab == 'tab_ano':
+        return dbc.Row([
+            dbc.Col([
+                html.A(id='link-propostas'),
+                html.H2("Temas das Propostas por Ano"),
+                html.P(''),
+
+                dcc.Dropdown(id='select-tema-prop',
+                            multi=False,
+                            value= 2021,
+                            options=[{'label': str(x), 'value': int(x)} for x in sorted(df_prop_tema_ano['Ano'].unique())]
+                            ),
+
+                dcc.Graph(id='tema-proposta-por-ano-chart',
+                        figure={}
+                )
+            ],
+            )
+        ], justify='center'
+        )   
+    elif tab == 'tab_total':
+        return dbc.Row([
+            dbc.Col([
+                html.A(id='link-propostas'),
+                html.H2("Temas das Propostas - Todos os anos"),
+                html.P(''),
+
+                dcc.Graph(id='tema-todos-anos-chart',
+                        figure={}
+                )
+            ],
+            )
+        ], justify='center'
+        )
+
+@app.callback(
     Output('tema-proposta-por-ano-chart', 'figure'),
     Input('select-tema-prop', 'value')
 )
@@ -719,6 +754,21 @@ def tema_proposta_por_ano(ano):
     # fig.update_xaxes(tickangle=45)
 
        
+    return fig
+
+@app.callback(
+    Output('tema-todos-anos-chart', 'figure'),
+    Input('select', 'value')
+)
+
+def tema_todos_anos_anos(dummy):
+    fig = px.line(df_prop_tema_ano, x="Ano", y="Contagem", color='Tema')
+    fig.update_layout(
+        plot_bgcolor="white",
+        title_x=0.5,
+        yaxis_title_text="<b>Tema</b>",
+        xaxis_title_text="<b>Propostas</b>"
+    )
     return fig
 
 """
