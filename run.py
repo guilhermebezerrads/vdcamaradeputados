@@ -338,7 +338,7 @@ def update_graph(ano):
     )
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
 
     return fig
@@ -388,7 +388,7 @@ def update_graph(ano):
     fig.update_layout(layout)
     
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
 
     return fig
@@ -414,7 +414,7 @@ def grafico_line(dummy):
     )
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
 
     return fig
@@ -459,7 +459,7 @@ def gera_grafico_novos_deputados_por_sexo(_):
 
     fig.update_layout(
         width=30,
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
 
     return fig
@@ -614,7 +614,7 @@ def gera_grafico_gastos_por_ano_(tipo_gasto="Gastos por deputados", ano=2021, ra
     )
     fig.update_yaxes(visible=ranking<=22, showticklabels=ranking<=22)
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
     
     return fig
@@ -672,7 +672,7 @@ def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=15, ra
     )
     fig.update_yaxes(visible=ranking<=22, showticklabels=ranking<=22)
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
     
     return fig
@@ -685,7 +685,7 @@ def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=15, ra
 def grafico_votacoes_por_ano(dummy):
     fig = px.bar(df_votacoes_por_ano, x="ano", y="idVotacao")
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
         title_x=0.5,
         title_text="Total de votações ao longo dos anos",
         xaxis_title_text="<b>Ano</b>",
@@ -693,9 +693,6 @@ def grafico_votacoes_por_ano(dummy):
     )
     fig.update_traces(marker_color='#30ade3')
     fig.update_layout(xaxis = {'type' : 'category'})
-    fig.update_layout(
-        plot_bgcolor="white",
-    )
 
     return fig
 
@@ -720,7 +717,7 @@ def grafico_orietancao(dummy):
         title_x=0.5,
     )
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
        
     return fig
@@ -778,15 +775,12 @@ def tema_proposta_por_ano(ano):
     fig.update_traces(marker_color='#30ade3')
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
         title_x=0.5,
         yaxis_title_text="<b>Tema</b>",
         xaxis_title_text="<b>Propostas</b>"
     )
     # fig.update_xaxes(tickangle=45)
-    fig.update_layout(
-        plot_bgcolor="white",
-    )
        
     return fig
 
@@ -798,13 +792,10 @@ def tema_proposta_por_ano(ano):
 def tema_todos_anos_anos(dummy):
     fig = px.line(df_prop_tema_ano, x="Ano", y="Contagem", color='Tema')
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
         title_x=0.5,
         yaxis_title_text="<b>Tema</b>",
         xaxis_title_text="<b>Propostas</b>"
-    )
-    fig.update_layout(
-        plot_bgcolor="white",
     )
 
     return fig
