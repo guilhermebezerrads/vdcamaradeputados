@@ -124,6 +124,26 @@ maindiv = html.Div(
                     width=12)
         ]),
         dbc.Row([
+            dbc.Col(html.P("Gabriel Victor Carvalho Rocha",
+                            className='text-center text-primary'),
+                    width=12)
+        ]),
+        dbc.Row([
+            dbc.Col(html.P("Guilherme Bezerra dos Santos",
+                            className='text-center text-primary'),
+                    width=12)
+        ]),
+        dbc.Row([
+            dbc.Col(html.P("Lucas Mariani Paiva Caldeira Brant",
+                            className='text-center text-primary'),
+                    width=12)
+        ]),
+        dbc.Row([
+            dbc.Col(html.P("Rafael Vinícius dos Santos",
+                            className='text-center text-primary'),
+                    width=12)
+        ]),
+        dbc.Row([
             dbc.Col([
                 html.Hr(),
                 html.A(id='link-participacao'),
