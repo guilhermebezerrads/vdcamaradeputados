@@ -209,7 +209,16 @@ maindiv = html.Div(
                 html.Br(),
                 html.H2("Deputados Votantes por Posicionamento"),
                 html.A(id='link-deputados-posicionamento'),
-                html.P(''),
+                
+                html.P("O gráfico mostra a quantidade de deputados por posicionamento (baseado no partido). O objetivo era observar as tendências" 
+                    "de aumento/redução de ideologias na câmara ao longo do tempo. Entretanto, devido a forma como os dados estão estruturados, um deputado" 
+                    "só aparece nos dados de um ano se ele votou pelo menos uma vez durante aquele ano, o que significa que o total de deputados em um dado ano."
+                    "não necessariamente condiz com o total de deputados presente na câmara. Ainda assim, como deputados que não votam não influenciam nos resultados," 
+                    "acreditamos que a visualização ainda é útil para representar as tendências."
+                ),
+                html.P("Ao longo do período podemos observar um pequeno aumento no número de deputados de direita e centro-direita, acompanhado de uma" 
+                    "pequena redução no número de deputados pertencentes a partidos de centro e esquerda."),
+                
                 # Gráfico participação em votação por região
                 dcc.Graph(id='line-chart',
                           figure={}
@@ -224,7 +233,11 @@ maindiv = html.Div(
             dbc.Col([
                 html.H2("Porcentagem de Votos a Favor/Contra a Orientação do Partido"),
                 html.A(id='link-orientacao'),
-                html.P(''),
+                html.P("O gráfico mostra a porcentagem votos seguindo ou não a orientação do partido (2003-2022), estratificados pelo posicionamento ideológico. " 
+                    "Só são contabilizados os votos em que os partidos deram orientação sim/não (não se absteram). De modo geral, deputados mais próximos do centro tendem " 
+                    "a ser os mais contrariantes, enquanto deputados de esquerda são os mais fiéis à orientação do partido."
+                ),
+
                 #Gráfico participação em votação por região
                 dcc.Graph(id='votos-orientacao',
                         figure={}
