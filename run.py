@@ -184,6 +184,8 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.Br(),
+                html.H2("Deputados Votantes por Posicionamento"),
                 html.A(id='link-deputados-posicionamento'),
                 html.P(''),
                 # Gráfico participação em votação por região
@@ -198,6 +200,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.H2("Porcentagem de Votos a Favor/Contra a Orientação do Partido"),
                 html.A(id='link-orientacao'),
                 html.P(''),
                 #Gráfico participação em votação por região
