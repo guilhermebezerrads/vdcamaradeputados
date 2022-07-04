@@ -134,17 +134,20 @@ maindiv = html.Div(
                 html.P(
                     'As seguintes visualizações mostrarão em uma perspectiva tempora, as participações, sendo que o usuário poderá escolher para'
                     'algumas delas sobre quais anosele gostaria de fazer a análise'),
-                # select ano
-                dcc.Dropdown(id='select',
-                             multi=False,
-                             value=2003,
-                             options=[{'label': str(x), 'value': int(x)} for x in sorted(frame['ano'].unique())]
-                             ),
 
                 # Gráfico participação em votação por região
                 dcc.Graph(id='bar-chart',
                           figure={}
                           ),
+
+                dcc.Slider(id='select',
+                        min=2003,
+                        max=2022,
+                        included=False,
+                        step=None,
+                        marks={i:str(i) for i in range(2003, 2022 + 1)},
+                        value=2003
+                    ),
             ],
                 width={'size': 8}
             )
@@ -156,19 +159,26 @@ maindiv = html.Div(
                 html.A(id='link-cordas'),
                 html.P(''),
                 html.Hr(),
-                # range ano
-                dcc.RangeSlider(2003, 2022, 1, id='range-ano',
-                                value=[2003, 2022],
-                                marks={i: str(i) for i in range(2003, 2022 + 1)},
-                                included=False
-                                ),
                 # Gráfico participação em votação por região
                 dcc.Graph(id='mudanca',
                           figure={}
                           ),
             ],
                 width={'size': 8}
-            )
+            ),
+            dbc.Col([
+                dcc.RangeSlider(id='range-ano',
+                    min=2003,
+                    max=2022,
+                    included=False,
+                    step=None,
+                    marks={i:str(i) for i in range(2003, 2022 + 1)},
+                    value=[2003, 2022]
+                )
+            ],
+                width={'size': 8},
+                style={"margin-top": "-40px"}
+            ),
         ], justify='center'
         ),
 
@@ -361,7 +371,7 @@ def update_graph(ano):
         orientation="h",
         valueformat=".0f",
         node=dict(
-            pad=10,
+            #pad=10,
             # thickness = 30,
             line=dict(
                 color="black",
