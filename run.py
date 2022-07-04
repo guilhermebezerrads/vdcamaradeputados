@@ -188,6 +188,20 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.A(id='link-orientacao'),
+                html.P(''),
+                #Gráfico participação em votação por região
+                dcc.Graph(id='votos-orientacao',
+                        figure={}
+                        ),
+            ],
+            width={'size':8}
+            )
+        ], justify='center'
+        ),
+
+        dbc.Row([
+            dbc.Col([
                 html.A(id='link-sexo'),
                 html.H2("Novos deputados por sexo"),
                 html.P("O gráfico a seguir mostra a diferença gigantesca entre o número de novos deputados "
@@ -269,20 +283,6 @@ maindiv = html.Div(
         ], justify="center"
         ),
 
-        dbc.Row([
-            dbc.Col([
-                html.A(id='link-orientacao'),
-                html.P(''),
-                #Gráfico participação em votação por região
-                dcc.Graph(id='votos-orientacao',
-                        figure={}
-                        ),
-            ],
-            width={'size':8}
-            )
-        ], justify='center'
-        ),
-
     ], style = CONTENT_STYLE
 
 )
@@ -337,6 +337,10 @@ def update_graph(ano):
         legend_title="Posicionamento"
     )
 
+    fig.update_layout(
+        plot_bgcolor="white",
+    )
+
     return fig
 
 
@@ -382,6 +386,11 @@ def update_graph(ano):
 
     fig = go.Figure(data=data_trace)
     fig.update_layout(layout)
+    
+    fig.update_layout(
+        plot_bgcolor="white",
+    )
+
     return fig
 
 
@@ -402,6 +411,10 @@ def grafico_line(dummy):
     fig.update_layout(
         title_text="Deputados Votantes por Posicionamento",
         title_x=0.5,
+    )
+
+    fig.update_layout(
+        plot_bgcolor="white",
     )
 
     return fig
@@ -442,6 +455,11 @@ def gera_grafico_novos_deputados_por_sexo(_):
         xaxis_type="category",
         xaxis_tickangle=-45,
         yaxis_title_text="Número de <b>novos</b> deputados"
+    )
+
+    fig.update_layout(
+        width=30,
+        plot_bgcolor="white",
     )
 
     return fig
@@ -595,6 +613,10 @@ def gera_grafico_gastos_por_ano_(tipo_gasto="Gastos por deputados", ano=2021, ra
         legend_title_text="",
     )
     fig.update_yaxes(visible=ranking<=22, showticklabels=ranking<=22)
+    fig.update_layout(
+        plot_bgcolor="white",
+    )
+    
     return fig
 
 
@@ -649,6 +671,10 @@ def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=15, ra
         yaxis_title_text=yaxis_title
     )
     fig.update_yaxes(visible=ranking<=22, showticklabels=ranking<=22)
+    fig.update_layout(
+        plot_bgcolor="white",
+    )
+    
     return fig
 
 
@@ -667,7 +693,10 @@ def grafico_votacoes_por_ano(dummy):
     )
     fig.update_traces(marker_color='#30ade3')
     fig.update_layout(xaxis = {'type' : 'category'})
-       
+    fig.update_layout(
+        plot_bgcolor="white",
+    )
+
     return fig
 
 @app.callback(
@@ -689,6 +718,9 @@ def grafico_orietancao(dummy):
     fig.update_layout(
         title_text="Porcentagem de Votos Contra ou a Favor da Orientação do Partido",
         title_x=0.5,
+    )
+    fig.update_layout(
+        plot_bgcolor="white",
     )
        
     return fig
@@ -752,7 +784,9 @@ def tema_proposta_por_ano(ano):
         xaxis_title_text="<b>Propostas</b>"
     )
     # fig.update_xaxes(tickangle=45)
-
+    fig.update_layout(
+        plot_bgcolor="white",
+    )
        
     return fig
 
@@ -769,6 +803,10 @@ def tema_todos_anos_anos(dummy):
         yaxis_title_text="<b>Tema</b>",
         xaxis_title_text="<b>Propostas</b>"
     )
+    fig.update_layout(
+        plot_bgcolor="white",
+    )
+
     return fig
 
 """
@@ -797,4 +835,4 @@ def ano_proposta_por_tema(tema):
 """
 
 if __name__ == '__main__':
-    app.run_server()
+   app.run_server()
