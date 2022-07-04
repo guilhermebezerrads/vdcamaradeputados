@@ -268,6 +268,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.Br(),
                 html.A(id='link-gastos'),
                 html.H1('Gastos na Câmara'),
                 html.P('Para ter uma noção dos gastos dos deputados, observando gastos fora do normal, '
