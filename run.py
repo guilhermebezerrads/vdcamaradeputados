@@ -151,11 +151,11 @@ maindiv = html.Div(
                 html.H4('Participações',
                         className='text-center text-primary, mb-4'),
                 html.P(
-                    'O objetivo desta primeira parte do trabalho é explorar a participação dos deputados de cada espéctro'
-                    'político nas votações realizadas na câmara.'),
+                    'O objetivo desta primeira parte do trabalho é explorar a participação dos deputados de cada espectro'
+                    ' político nas votações realizadas na câmara.'),
                 html.P(
-                    'As seguintes visualizações mostrarão em uma perspectiva tempora, as participações, sendo que o usuário poderá escolher para'
-                    'algumas delas sobre quais anosele gostaria de fazer a análise'),
+                    'As seguintes visualizações mostrarão em uma perspectiva temporal, as participações, sendo que o usuário poderá escolher para '
+                    'algumas delas sobre quais anos ele gostaria de fazer a análise.'),
 
                 # Gráfico participação em votação por região
                 dcc.Graph(id='bar-chart',
@@ -210,14 +210,14 @@ maindiv = html.Div(
                 html.H2("Deputados Votantes por Posicionamento"),
                 html.A(id='link-deputados-posicionamento'),
                 
-                html.P("O gráfico mostra a quantidade de deputados por posicionamento (baseado no partido). O objetivo era observar as tendências" 
-                    "de aumento/redução de ideologias na câmara ao longo do tempo. Entretanto, devido a forma como os dados estão estruturados, um deputado" 
-                    "só aparece nos dados de um ano se ele votou pelo menos uma vez durante aquele ano, o que significa que o total de deputados em um dado ano."
-                    "não necessariamente condiz com o total de deputados presente na câmara. Ainda assim, como deputados que não votam não influenciam nos resultados," 
-                    "acreditamos que a visualização ainda é útil para representar as tendências."
+                html.P("O gráfico mostra a quantidade de deputados por posicionamento (baseado no partido). O objetivo era observar as tendências " 
+                    "de aumento/redução de ideologias na câmara ao longo do tempo. Entretanto, devido a forma como os dados estão estruturados, um deputado " 
+                    "só aparece nos dados de um ano se ele votou pelo menos uma vez durante aquele ano, o que significa que o total de deputados em um dado ano "
+                    "não necessariamente condiz com o total de deputados presente na câmara. Ainda assim, como deputados que não votam não influenciam nos resultados, " 
+                    "acreditamos que a visualização ainda é útil para representar as tendências. "
                 ),
                 html.P("Ao longo do período podemos observar um pequeno aumento no número de deputados de direita e centro-direita, acompanhado de uma" 
-                    "pequena redução no número de deputados pertencentes a partidos de centro e esquerda."),
+                    " pequena redução no número de deputados pertencentes a partidos de centro e esquerda."),
                 
                 # Gráfico participação em votação por região
                 dcc.Graph(id='line-chart',
@@ -233,7 +233,7 @@ maindiv = html.Div(
             dbc.Col([
                 html.H2("Porcentagem de Votos a Favor/Contra a Orientação do Partido"),
                 html.A(id='link-orientacao'),
-                html.P("O gráfico mostra a porcentagem votos seguindo ou não a orientação do partido (2003-2022), estratificados pelo posicionamento ideológico. " 
+                html.P("O gráfico mostra a porcentagem de votos seguindo ou não a orientação do partido (2003-2022), estratificados pelo posicionamento ideológico. " 
                     "Só são contabilizados os votos em que os partidos deram orientação sim/não (não se absteram). De modo geral, deputados mais próximos do centro tendem " 
                     "a ser os mais contrariantes, enquanto deputados de esquerda são os mais fiéis à orientação do partido."
                 ),
@@ -275,6 +275,8 @@ maindiv = html.Div(
             dbc.Col([
                 html.A(id='link-votacoes'),
                 html.H2("Quantidade de votações ao longo dos anos"),
+                html.P("Abaixo temos um gráfico que mostra a quantidade de votações por ano na câmara dos deputados. Até 2014, não há um padrão muito bem definido sobre a quantidade. De 2015 em diante, a média de votações por ano aumenta. Por fim, há um recorde de votações em 2021, chegando a mais do que o dobro de qualquer outro ano anterior. Provavelmente, um dos motivos é ser um ano após a pandemia, com o início da vacinação e flexibilizações da quarentena. "
+                ),
                 dcc.Graph(id='votacoes-por-ano-chart',
                           figure={}
                           )
@@ -287,6 +289,10 @@ maindiv = html.Div(
         dbc.Row([
             dbc.Col([
                 html.H2("Temas de Propostas ao longo dos Anos"),
+                html.P("Nos gráficos abaixos, exploramos a quantidade de proposta de cada tema, em cada ano. No primeiro gráfico podemos ver em cada ano qual foi o ranking de temas, ou seja, mostrando primeiro quais os temas que mais tiveram propostas naquele ano. Para exemplificar, o ano de 2020 teve 'Saúde' como principal tema de discussão e propostas. "
+                ),
+                html.P("No gráfico da aba seguinte, podemos ver a evolução de um tema ao longo dos anos, de acordo com a quantidade de propostas na categoria. O gráfico permite isolar um tema específico (clicando duas vezes na sua legenda), e comparar vários temas entre si."
+                ),
                 dcc.Tabs(id="tabs_temas", value="tab_ano",
 
                          children=[
