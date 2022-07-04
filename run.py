@@ -29,6 +29,8 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY],
                 meta_tags=[{'name': 'viewport',
                             'content': 'width=device-width, initial-scale=1.0'}])
 
+app.title = "Visualização dos dados da Câmara dos deputados"
+
 server = app.server
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
