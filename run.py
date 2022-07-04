@@ -248,6 +248,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.H2("Temas de Propostas ao longo dos Anos"),
                 dcc.Tabs(id="tabs_temas", value="tab_ano",
 
                          children=[
@@ -348,7 +349,7 @@ def update_graph(ano):
     )
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
 
     return fig
@@ -398,7 +399,7 @@ def update_graph(ano):
     fig.update_layout(layout)
     
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
 
     return fig
@@ -424,7 +425,7 @@ def grafico_line(dummy):
     )
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
 
     return fig
@@ -469,7 +470,7 @@ def gera_grafico_novos_deputados_por_sexo(_):
 
     fig.update_layout(
         width=30,
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
 
     return fig
@@ -624,7 +625,7 @@ def gera_grafico_gastos_por_ano_(tipo_gasto="Gastos por deputados", ano=2021, ra
     )
     fig.update_yaxes(visible=ranking<=22, showticklabels=ranking<=22)
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
     
     return fig
@@ -682,7 +683,7 @@ def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=15, ra
     )
     fig.update_yaxes(visible=ranking<=22, showticklabels=ranking<=22)
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
     
     return fig
@@ -695,7 +696,7 @@ def gera_grafico_gastos_totais(tipo_gasto="Gastos por deputados", ranking=15, ra
 def grafico_votacoes_por_ano(dummy):
     fig = px.bar(df_votacoes_por_ano, x="ano", y="idVotacao")
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
         title_x=0.5,
         title_text="Total de votações ao longo dos anos",
         xaxis_title_text="<b>Ano</b>",
@@ -703,9 +704,6 @@ def grafico_votacoes_por_ano(dummy):
     )
     fig.update_traces(marker_color='#30ade3')
     fig.update_layout(xaxis = {'type' : 'category'})
-    fig.update_layout(
-        plot_bgcolor="white",
-    )
 
     return fig
 
@@ -730,7 +728,7 @@ def grafico_orietancao(dummy):
         title_x=0.5,
     )
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
     )
        
     return fig
@@ -744,7 +742,6 @@ def gera_tabs_temas(tab):
         return dbc.Row([
             dbc.Col([
                 html.A(id='link-propostas'),
-                html.H2("Temas das Propostas por Ano"),
                 html.P(''),
 
                 dcc.Dropdown(id='select-tema-prop',
@@ -764,7 +761,6 @@ def gera_tabs_temas(tab):
         return dbc.Row([
             dbc.Col([
                 html.A(id='link-propostas'),
-                html.H2("Temas das Propostas - Todos os anos"),
                 html.P(''),
 
                 dcc.Graph(id='tema-todos-anos-chart',
@@ -788,15 +784,13 @@ def tema_proposta_por_ano(ano):
     fig.update_traces(marker_color='#30ade3')
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
+        title_text="Temas das Propostas por Ano",
         title_x=0.5,
         yaxis_title_text="<b>Tema</b>",
         xaxis_title_text="<b>Propostas</b>"
     )
     # fig.update_xaxes(tickangle=45)
-    fig.update_layout(
-        plot_bgcolor="white",
-    )
        
     return fig
 
@@ -808,13 +802,11 @@ def tema_proposta_por_ano(ano):
 def tema_todos_anos_anos(dummy):
     fig = px.line(df_prop_tema_ano, x="Ano", y="Contagem", color='Tema')
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="#f5f5f5",
+        title_text="Temas das Propostas - Todos os anos",
         title_x=0.5,
         yaxis_title_text="<b>Tema</b>",
         xaxis_title_text="<b>Propostas</b>"
-    )
-    fig.update_layout(
-        plot_bgcolor="white",
     )
 
     return fig
