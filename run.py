@@ -731,7 +731,6 @@ def gera_tabs_temas(tab):
         return dbc.Row([
             dbc.Col([
                 html.A(id='link-propostas'),
-                html.H2("Temas das Propostas por Ano"),
                 html.P(''),
 
                 dcc.Dropdown(id='select-tema-prop',
@@ -751,7 +750,6 @@ def gera_tabs_temas(tab):
         return dbc.Row([
             dbc.Col([
                 html.A(id='link-propostas'),
-                html.H2("Temas das Propostas - Todos os anos"),
                 html.P(''),
 
                 dcc.Graph(id='tema-todos-anos-chart',
@@ -776,6 +774,7 @@ def tema_proposta_por_ano(ano):
 
     fig.update_layout(
         plot_bgcolor="#f5f5f5",
+        title_text="Temas das Propostas por Ano",
         title_x=0.5,
         yaxis_title_text="<b>Tema</b>",
         xaxis_title_text="<b>Propostas</b>"
@@ -793,6 +792,7 @@ def tema_todos_anos_anos(dummy):
     fig = px.line(df_prop_tema_ano, x="Ano", y="Contagem", color='Tema')
     fig.update_layout(
         plot_bgcolor="#f5f5f5",
+        title_text="Temas das Propostas - Todos os anos",
         title_x=0.5,
         yaxis_title_text="<b>Tema</b>",
         xaxis_title_text="<b>Propostas</b>"
