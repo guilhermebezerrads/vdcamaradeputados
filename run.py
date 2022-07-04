@@ -497,8 +497,8 @@ def gera_tabs_gastos(tab):
                             }
                             ),
                 daq.NumericInput(id='id_ano_ranking',
-                            min=3,
-                            max=2000,
+                            min=1,
+                            max=9999,
                             value= 15,
                             size=100,
                             label="Quantidade no ranking",
@@ -538,8 +538,8 @@ def gera_tabs_gastos(tab):
                             }
                             ),
                 daq.NumericInput(id='id_total_ranking',
-                            min=3,
-                            max=2000,
+                            min=1,
+                            max=9999,
                             value= 15,
                             size=100,
                             label="Quantidade no ranking",
@@ -747,14 +747,23 @@ def gera_tabs_temas(tab):
                 html.A(id='link-propostas'),
                 html.P(''),
 
-                dcc.Dropdown(id='select-tema-prop',
-                            multi=False,
-                            value= 2021,
-                            options=[{'label': str(x), 'value': int(x)} for x in sorted(df_prop_tema_ano['Ano'].unique())]
-                            ),
+                # dcc.Dropdown(id='select-tema-prop',
+                #             multi=False,
+                #             value= 2021,
+                #             options=[{'label': str(x), 'value': int(x)} for x in sorted(df_prop_tema_ano['Ano'].unique())]
+                #             ),
 
                 dcc.Graph(id='tema-proposta-por-ano-chart',
                         figure={}
+                ),
+
+                dcc.Slider(id='select-tema-prop',
+                        min=2002,
+                        max=2022,
+                        included=False,
+                        step=None,
+                        marks={i:str(i) for i in range(2002, 2022 + 1)},
+                        value=2021
                 )
             ],
             )
