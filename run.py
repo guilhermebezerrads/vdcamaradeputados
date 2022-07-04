@@ -238,6 +238,7 @@ maindiv = html.Div(
 
         dbc.Row([
             dbc.Col([
+                html.H2("Temas de Propostas ao longo dos Anos"),
                 dcc.Tabs(id="tabs_temas", value="tab_ano",
 
                          children=[
